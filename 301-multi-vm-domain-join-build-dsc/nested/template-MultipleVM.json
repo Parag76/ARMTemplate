@@ -227,7 +227,8 @@
   },
   "variables": {
     "apiVersion": "2015-06-15",
-
+    "loadBalancerName": "BackendLB",
+    "lbId": "[resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName'))]",
     "branch": "master",
     "folder": "/301-multi-vm-domain-join-build-dsc/",
     "baseURL": "[concat('https://raw.githubusercontent.com/Microsoft/MSITARM/',variables('branch'),variables('folder'))]",
