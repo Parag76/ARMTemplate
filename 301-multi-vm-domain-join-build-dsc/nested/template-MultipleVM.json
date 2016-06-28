@@ -247,15 +247,15 @@
 
     "modulesUrl": "[concat(variables('BaseURL'),variables('DomainJoinzip'))]",
     "FormatDisksUrl": "[concat(variables('BaseURL'), variables('formatDiskstemplate'))]",
-    "loadBalancerName": "BackendLB",
-    "lbId": "[resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName'))]",
+
     "vnetSubscriptionid": "[subscription().subscriptionId]",
     "vnetID": "[concat('/subscriptions/',variables('vnetSubscriptionid'),'/resourceGroups/',parameters('vnetResourceGroup'),'/providers/Microsoft.Network/virtualnetworks/',parameters('virtualNetwork'))]",
     "imageOffer": "[parameters('imageOffer')]",
     "imagePublisher": "[parameters('imagePublisher')]",
     "sku": "[parameters('sku')]",
     "nicName": "[parameters('vmName')]",
-
+    "loadBalancerName": "BackendLB",
+    "lbId": "[resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName'))]",
     "osDiskVhdName": "[concat('http://',parameters('userImageStorageAccountName'),'.blob.core.windows.net/vhds/',parameters('vmName'),'osDisk')]",
     "subnetName": "[parameters('subnetName')]",
     "subnetRef": "[concat(variables('vnetId'), '/subnets/', variables('subnetName'))]",
@@ -387,6 +387,9 @@
         "name": "nicLoop",
         "count": "[parameters('numberOfInstances')]"
       },
+      "dependsOn": [
+        "[concat('Microsoft.Network/loadBalancers/', variables('loadBalancerName'))]"
+      ],
       "properties": {
         "ipConfigurations": [
           {
@@ -412,7 +415,6 @@
       "properties": {
       }
     },
-
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/loadBalancers",
@@ -436,10 +438,45 @@
             },
             "name": "LoadBalancerFrontend"
           }
-        ]      
+        ],
+        "backendAddressPools": [
+          {
+            "name": "BackendPool1"
+          }
+        ],
+        "loadBalancingRules": [
+          {
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')), '/frontendIPConfigurations/LoadBalancerFrontend')]"
+              },
+              "backendAddressPool": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')), '/backendAddressPools/BackendPool1')]"
+              },
+              "probe": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')), '/probes/lbprobe')]"
+              },
+              "protocol": "Tcp",
+              "frontendPort": 80,
+              "backendPort": 80,
+              "idleTimeoutInMinutes": 15
+            },
+            "name": "lbrule"
+          }
+        ],
+        "probes": [
+          {
+            "properties": {
+              "protocol": "Tcp",
+              "port": 80,
+              "intervalInSeconds": 15,
+              "numberOfProbes": 2
+            },
+            "name": "lbprobe"
+          }
+        ]
       }
     },
-
     {
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat(parameters('vmName'),copyindex(1))]",
