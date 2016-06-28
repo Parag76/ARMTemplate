@@ -387,8 +387,7 @@
         "name": "nicLoop",
         "count": "[parameters('numberOfInstances')]"
       },
-      "dependsOn": [
-        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+      "dependsOn": [        
         "[concat('Microsoft.Network/loadBalancers/', variables('loadBalancerName'))]"
       ],
       "properties": {
