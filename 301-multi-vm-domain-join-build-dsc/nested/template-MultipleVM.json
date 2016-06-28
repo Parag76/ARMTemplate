@@ -432,7 +432,7 @@
                 "id": "[variables('subnetRef')]"
               },
               
-              "privateIPAllocationMethod": "Static"
+              "privateIPAllocationMethod": "Dynamic"
             },
             "name": "LoadBalancerFrontend"
           }
