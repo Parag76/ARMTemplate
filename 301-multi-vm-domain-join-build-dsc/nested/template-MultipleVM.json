@@ -244,7 +244,7 @@
     "formatDiskszip": "scripts/FormatDataDisk.ps1.zip",
     "formatDiskstemplate": "nested/template-DataDisks.json",
     "diskarrayTemplate": "nested/DiskArray.json",
-
+    "loadBalancerName": "BackendLB",
     "modulesUrl": "[concat(variables('BaseURL'),variables('DomainJoinzip'))]",
     "FormatDisksUrl": "[concat(variables('BaseURL'), variables('formatDiskstemplate'))]",
 
