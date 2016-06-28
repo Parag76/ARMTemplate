@@ -10,6 +10,14 @@
         "description": "Name for the Virtual Machine."
       }
     },
+    "AvailabilitySet": {
+      "type": "string",
+      "defaultValue": "AvSet",
+      "minLength": 3,
+      "metadata": {
+        "description": "Name for the AvailabilitySet."
+      }
+    },
     "numberOfInstances": {
       "type": "int",
       "defaultValue": 1,
@@ -231,7 +239,7 @@
     "branch": "master",
     "folder": "/301-multi-vm-domain-join-build-dsc/",
     "baseURL": "[concat('https://raw.githubusercontent.com/Microsoft/MSITARM/',variables('branch'),variables('folder'))]",
-    "availabilitySetName": "AvSetGIT",
+    "availabilitySetName": "[parameters('AvailabilitySet')]",
     "DomainJoinzip": "scripts/DomainJoin.ps1.zip",
     "formatDiskszip": "scripts/FormatDataDisk.ps1.zip",
     "formatDiskstemplate": "nested/template-DataDisks.json",
@@ -399,7 +407,7 @@
         ]
       }
     },
-     {
+    {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/loadBalancers",
       "name": "[variables('loadBalancerName')]",
@@ -417,7 +425,7 @@
               "subnet": {
                 "id": "[variables('subnetRef')]"
               },
-              
+
               "privateIPAllocationMethod": "Static"
             },
             "name": "LoadBalancerFrontend"
@@ -520,7 +528,7 @@
                 "content": "[variables('firstLogonCommands')]"
               }
             ],
-           "winRM": {
+            "winRM": {
               "listeners": [
                 {
                   "protocol": "Http"
