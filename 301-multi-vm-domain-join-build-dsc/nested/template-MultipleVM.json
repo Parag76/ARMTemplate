@@ -387,7 +387,10 @@
         "name": "nicLoop",
         "count": "[parameters('numberOfInstances')]"
       },
-     
+      "dependsOn": [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+        "[concat('Microsoft.Network/loadBalancers/', variables('loadBalancerName'))]"
+      ],
       "properties": {
         "ipConfigurations": [
           {
@@ -421,9 +424,7 @@
       "tags": {
         "displayName": "LoadBalancer"
       },
-      "dependsOn": [
-        "[variables('vnetId')]"
-      ],
+      
       "properties": {
         "frontendIPConfigurations": [
           {
